@@ -14,10 +14,10 @@ export const HOOK_SECONDS = 3;
 export const HOOK_MAX_WORDS = 10;
 
 /** Engagement window = hook + hold = seconds 0-15. Must work standalone. */
-export const WINDOW = { seconds: 15, minWords: 32, maxWords: 38, hardCapWords: 40 } as const;
+export const WINDOW = { seconds: 15, minWords: 32, maxWords: 38, hardCapWords: 40, blockBelowWords: 25 } as const;
 
 /** Whole script ~60 s. */
-export const TOTAL = { seconds: 60, minWords: 140, maxWords: 155, hardCapWords: 160 } as const;
+export const TOTAL = { seconds: 60, minWords: 140, maxWords: 155, hardCapWords: 160, blockBelowWords: 120 } as const;
 
 /** Body beats between second 15 and 50. */
 export const BODY_BEATS = { min: 2, max: 3 } as const;

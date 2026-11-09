@@ -22,6 +22,8 @@ export type IssueCode =
   | 'schema'
   | 'hook_too_long'
   | 'window_too_short'
+  | 'window_short_warn'
+  | 'total_short_warn'
   | 'window_too_long'
   | 'window_long_warn'
   | 'total_too_short'
@@ -165,10 +167,12 @@ function validateOne(s: Script, i: number, ctx: ValidationContext, sourceGrams: 
   const win = countWords(windowText(s));
   const total = countWords(spoken);
   if (hook > HOOK_MAX_WORDS) out.push(issue(i, 'hook_too_long', 'error', `${tag}: the hook has ${hook} words; it must be at most ${HOOK_MAX_WORDS}.`));
-  if (win < WINDOW.minWords) out.push(issue(i, 'window_too_short', 'error', `${tag}: hook + hold has ${win} words; the first ${WINDOW.seconds} seconds need ${WINDOW.minWords}-${WINDOW.maxWords}.`));
+  if (win < WINDOW.blockBelowWords) out.push(issue(i, 'window_too_short', 'error', `${tag}: hook + hold has ${win} words; the first ${WINDOW.seconds} seconds need ${WINDOW.minWords}-${WINDOW.maxWords}.`));
+  else if (win < WINDOW.minWords) out.push(issue(i, 'window_short_warn', 'warning', `${tag}: hook + hold has ${win} words (target ${WINDOW.minWords}-${WINDOW.maxWords}).`));
   else if (win > WINDOW.hardCapWords) out.push(issue(i, 'window_too_long', 'error', `${tag}: hook + hold has ${win} words; it must not exceed ${WINDOW.hardCapWords} (target ${WINDOW.minWords}-${WINDOW.maxWords}).`));
   else if (win > WINDOW.maxWords) out.push(issue(i, 'window_long_warn', 'warning', `${tag}: hook + hold has ${win} words (target ${WINDOW.minWords}-${WINDOW.maxWords}); it may run slightly past ${WINDOW.seconds} seconds.`));
-  if (total < TOTAL.minWords) out.push(issue(i, 'total_too_short', 'error', `${tag}: the script has ${total} words; it needs ${TOTAL.minWords}-${TOTAL.maxWords} for about ${TOTAL.seconds} seconds.`));
+  if (total < TOTAL.blockBelowWords) out.push(issue(i, 'total_too_short', 'error', `${tag}: the script has ${total} words; it needs ${TOTAL.minWords}-${TOTAL.maxWords} for about ${TOTAL.seconds} seconds.`));
+  else if (total < TOTAL.minWords) out.push(issue(i, 'total_short_warn', 'warning', `${tag}: the script has ${total} words (target ${TOTAL.minWords}-${TOTAL.maxWords}); it will run a little under ${TOTAL.seconds} seconds.`));
   else if (total > TOTAL.hardCapWords) out.push(issue(i, 'total_too_long', 'error', `${tag}: the script has ${total} words; it must not exceed ${TOTAL.hardCapWords} (target ${TOTAL.minWords}-${TOTAL.maxWords}).`));
   else if (total > TOTAL.maxWords) out.push(issue(i, 'total_long_warn', 'warning', `${tag}: the script has ${total} words (target ${TOTAL.minWords}-${TOTAL.maxWords}); it may run a little over ${TOTAL.seconds} seconds.`));
 

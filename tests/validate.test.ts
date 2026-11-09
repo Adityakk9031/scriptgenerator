@@ -87,7 +87,10 @@ describe('length rules', () => {
     expect(codes(run({ hook: 10, hold: 26 }), 'error')).not.toContain('hook_too_long');
   });
   it('window: 31 error, 32 ok, 38 ok, 39-40 warning, 41 error', () => {
-    expect(codes(run({ hook: 8, hold: 23 }), 'error')).toContain('window_too_short');
+    expect(codes(run({ hook: 8, hold: 16 }), 'error')).toContain('window_too_short'); // 24
+    const shortWarn = run({ hook: 8, hold: 23 }); // 31
+    expect(codes(shortWarn, 'warning')).toContain('window_short_warn');
+    expect(shortWarn.valid).toBe(true);
     expect(codes(run({ hook: 8, hold: 24 }))).not.toContain('window_too_short');
     expect(codes(run({ hook: 8, hold: 30 }))).toEqual([]); // 38
     const warn = run({ hook: 8, hold: 32, close: 18 }); // 40
@@ -96,7 +99,10 @@ describe('length rules', () => {
     expect(codes(run({ hook: 8, hold: 33, close: 18 }), 'error')).toContain('window_too_long'); // 41
   });
   it('total: 139 error, 140 ok, 155 ok, 156-160 warning, 161 error', () => {
-    expect(codes(run({ body: [45, 38] }), 'error')).toContain('total_too_short'); // 36+83+20 = 139
+    expect(codes(run({ body: [30, 33] }), 'error')).toContain('total_too_short'); // 36+63+20 = 119
+    const shortTotal = run({ body: [45, 38] }); // 36+83+20 = 139
+    expect(codes(shortTotal, 'warning')).toContain('total_short_warn');
+    expect(shortTotal.valid).toBe(true);
     expect(codes(run({ body: [45, 39] }), 'error')).not.toContain('total_too_short'); // 140
     expect(codes(run({ body: [45, 54] }))).toEqual([]); // 155
     const warn = run({ body: [45, 55] }); // 156
