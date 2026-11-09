@@ -7,7 +7,8 @@ import { formatCommentInsights, formatVideoLine, sanitizeForPrompt } from './for
 import { platformLabel } from './intake';
 
 export const ANALYZE_PROMPT_VERSION = 1;
-export const ANALYZE_MAX_OUTPUT_TOKENS = 1100;
+// A real run on 15 videos was truncated at 1100, so leave generous room (includes reasoning tokens).
+export const ANALYZE_MAX_OUTPUT_TOKENS = 2500;
 
 const text = (max: number) => z.string().min(1).max(max);
 

@@ -19,7 +19,8 @@ import {
 import { ScriptSet } from '../schemas/script';
 
 export const GENERATE_PROMPT_VERSION = 1;
-export const GENERATE_MAX_OUTPUT_TOKENS = 3200;
+// Reasoning tokens count against this cap; a real repair attempt spent 3200 on reasoning alone (max ~$0.04 per call).
+export const GENERATE_MAX_OUTPUT_TOKENS = 8000;
 
 export const SCRIPT_SET_JSON_SCHEMA = z.toJSONSchema(ScriptSet) as Record<string, unknown>;
 
