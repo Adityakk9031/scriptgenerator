@@ -11,7 +11,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "record:fixtures": "tsx scripts/record-fixtures.ts",
-    "check:openai": "tsx scripts/check-openai.ts"
+    "check:openai": "tsx scripts/check-openai.ts",
+    "smoke": "tsx scripts/smoke.ts"
   },
   "dependencies": {
     "apify-client": "^2.25.0",
